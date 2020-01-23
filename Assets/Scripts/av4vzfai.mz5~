@@ -1,0 +1,197 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Vt1 : Unit
+{
+    
+    public GameObject playerReference;
+    public GameObject bottle;
+    private GameObject newBottle;
+
+    public Transform bottlePosition;
+
+    private SpriteRenderer sprite;
+    private EnemyState currentState;
+    private Animator animator;
+    private Rigidbody2D vt1_rigidbody;
+
+    Vector3 endPoint;
+
+    float idleSpeed = 14.0f,
+        bottleSpeed = 10.0f,
+        minDst = 0.01f,
+        waitTimer = 0,
+        spottedTimer = 1,
+        randTime,
+        randDir;
+
+    bool idlePositionFlag = true;
+    bool attackingPositionFlag = false;
+
+    RaycastHit2D spottedRight;
+    RaycastHit2D spottedLeft;
+
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+        sprite = GetComponentInChildren<SpriteRenderer>();
+        vt1_rigidbody = GetComponent<Rigidbody2D>();
+
+        currentState = EnemyState.initializing;
+
+        randTime = Random.Range(0.0f, 2.0f);
+        
+    }
+
+    private void Start()
+    {
+        randDir = Random.Range(-1, 2);
+        if (randDir == 0) randDir += 1;
+    }
+
+    public virtual void FixedUpdate()
+    {
+        Raycasting();
+
+        switch (currentState)
+        {
+            case EnemyState.initializing:
+                currentState = EnemyState.idle;
+                break;
+            case EnemyState.idle:
+                Idle();
+                break;
+            case EnemyState.chasing:
+                Chasing();
+                break;
+            case EnemyState.attacking:
+                Attacking();
+                break;
+            case EnemyState.fleeing:
+                Fleeing();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void Idle() {
+
+        // !отсюда ходьба туда-сюда!
+        float step = idleSpeed * Time.deltaTime;
+
+        animState = EnemyAnim.idle;
+        sprite.flipX = false;
+        waitTimer += Time.deltaTime;
+
+        if (waitTimer > randTime)
+        {
+            if (idlePositionFlag)
+            {
+                endPoint = transform.position + new Vector3(Random.Range(3, 6) * randDir, 0, 0);
+                
+                idlePositionFlag = false;
+            }
+            animState = EnemyAnim.run;
+            sprite.flipX = randDir < 0;
+            transform.position = Vector3.MoveTowards(transform.position, endPoint, step);
+
+            if (Vector3.Distance(transform.position, endPoint) < minDst)
+            {
+                waitTimer = 0;
+                randDir = -randDir;
+                randTime = Random.Range(0.0f, 2.0f);
+                idlePositionFlag = true;
+                Idle();
+            }
+        }
+    }
+    public virtual void Attacking()
+    {
+        if (spottedLeft.collider)
+        {
+            attackingPositionFlag = false;
+        }
+        else if (spottedRight.collider)
+        {
+            attackingPositionFlag = true;
+        }
+
+        float step = bottleSpeed * Time.deltaTime;
+
+        animState = EnemyAnim.spotted;
+        sprite.flipX = attackingPositionFlag;
+
+        spottedTimer += Time.deltaTime;
+
+        if (spottedTimer > 1.5f)
+        {
+            animState = EnemyAnim.attack;
+
+            newBottle.transform.position = Vector3.MoveTowards(bottlePosition.position, playerReference.transform.position, step);
+
+            Debug.Log(bottle.transform.position);
+        }
+
+    }
+    public virtual void Chasing()
+    {
+    }
+    
+    public virtual void Fleeing()
+    {
+    }
+    
+    private EnemyAnim animState
+    {
+        get { return (EnemyAnim)animator.GetInteger("State"); }
+        set { animator.SetInteger("State", (int)value); }
+    }
+
+    void Raycasting()
+    {
+        Vector3 lineEndRight = transform.position + new Vector3(20, 0, 0);
+        Vector3 lineEndLeft = transform.position - new Vector3(20, 0, 0);
+
+        Debug.DrawLine(transform.position, lineEndRight, Color.red);
+        Debug.DrawLine(transform.position, lineEndLeft, Color.green);
+
+        spottedRight = Physics2D.Linecast(transform.position, lineEndRight, 1 << LayerMask.NameToLayer("Player"));
+        spottedLeft = Physics2D.Linecast(transform.position, lineEndLeft, 1 << LayerMask.NameToLayer("Player"));
+
+        if (spottedRight || spottedLeft)
+        {
+            currentState = EnemyState.attacking;
+        }
+    }
+
+    void BottleSpawn()
+    {
+       newBottle = Instantiate(bottle, bottlePosition.position, bottle.transform.rotation) as GameObject;
+
+        
+
+        
+    }
+}
+
+public enum EnemyState
+{
+    initializing,
+    idle,
+    chasing,
+    attacking,
+    fleeing
+}
+
+public enum EnemyAnim
+{
+    idle,
+    damaged,
+    run,
+    spotted,
+    attack
+}
+
+
