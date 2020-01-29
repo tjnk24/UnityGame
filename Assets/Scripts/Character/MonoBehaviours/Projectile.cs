@@ -39,7 +39,6 @@ public class Projectile : PoolingComponent
 */
     public void StartAttack()
     {
-
         projectileDamager.EnableDamage();
         projectileDamager.disableDamageAfterHit = true;
     }

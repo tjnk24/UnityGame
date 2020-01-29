@@ -80,6 +80,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -165,8 +166,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  offset: {x: -0.001, y: 0.0002}
-  size: {x: 0.9, y: 0.4}
+  offset: {x: -0.002, y: 0.00020000339}
+  size: {x: 1, y: 0.5}
   OnDamageableHit:
     m_PersistentCalls:
       m_Calls:
@@ -181,8 +182,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: Damager+DamagableEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   OnNonDamageableHit:
     m_PersistentCalls:
       m_Calls:
@@ -197,8 +196,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-    m_TypeName: Damager+NonDamagableEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
   hittableLayers:
     serializedVersion: 2
     m_Bits: 6400

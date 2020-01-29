@@ -43,6 +43,7 @@ public class EnemyBehaviour : MonoBehaviour
 
     protected CharacterController2D characterController2D;
     protected Damageable damageable;
+    protected Damageable playerDamageable;
     protected ObjectPool bulletPool;
     protected ObjectPool bloodPool;
 
@@ -64,6 +65,7 @@ public class EnemyBehaviour : MonoBehaviour
         capsuleCollider2D = GetComponent<CapsuleCollider2D>();
         animator = GetComponent<Animator>();
         damageable = GetComponent<Damageable>();
+        playerDamageable = GameObject.Find("Player").GetComponent<Damageable>();
 
         randomTime = Random.Range(1, 4);
         
@@ -288,12 +290,19 @@ public class EnemyBehaviour : MonoBehaviour
     }
     public bool CheckCurrentHealth()
     {
-        if (damageable.CurrentHealth < criticalHealth)
+        if (damageable.currentHealth < criticalHealth)
         {
             return true;
         }
 
         return false;
+    }
+
+    public int GetPlayerHealth()
+    {
+        int playerHealth = playerDamageable.currentHealth;
+
+        return playerHealth;
     }
 
     public void OnDamagedMove()
