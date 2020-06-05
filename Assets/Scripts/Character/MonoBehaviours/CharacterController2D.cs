@@ -15,7 +15,7 @@ public class CharacterController2D : MonoBehaviour
 
     new Rigidbody2D rigidbody2D;
     CapsuleCollider2D capsuleCollider2D;
-    
+
     RaycastHit2D[] foundHits = new RaycastHit2D[3];
     Collider2D[] groundColliders = new Collider2D[3];
     Vector2[] raycastPositions = new Vector2[3];
@@ -52,7 +52,7 @@ public class CharacterController2D : MonoBehaviour
 
     public void CheckCapsuleEndCollisions()
     {
-        
+
         Vector2 raycastStart;
         Vector2 raycastDirection;
         float raycastDistance;
@@ -67,7 +67,7 @@ public class CharacterController2D : MonoBehaviour
         raycastDistance = capsuleCollider2D.size.x * 0.5f + groundedRaycastDistance * 2f;
 
         Vector2 raycastStartBottomCentre = raycastStart + Vector2.down * (capsuleCollider2D.size.y * 0.5f - capsuleCollider2D.size.x * 0.5f);
-        
+
         raycastPositions[0] = raycastStartBottomCentre + Vector2.left * capsuleCollider2D.size.x * 0.5f; //левая крайняя точка снизу
         raycastPositions[1] = raycastStartBottomCentre; //нижний центр
         raycastPositions[2] = raycastStartBottomCentre + Vector2.right * capsuleCollider2D.size.x * 0.5f; //правая крайняя точка снизу
@@ -94,7 +94,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        
+
     }
 #endif
 }

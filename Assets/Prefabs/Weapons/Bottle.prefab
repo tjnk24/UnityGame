@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 2154066287143775050}
   - component: {fileID: 6984021505521405985}
   m_Layer: 10
-  m_Name: Bottle
+  m_Name: bottle
   m_TagString: EnemyWeapons
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,6 +69,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
